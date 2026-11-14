@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react'
+
+import { useEffect, useMemo, useState } from 'react'
 import { ErrorScreen } from '../components/ErrorScreen'
 import { SkeletonList } from '../components/SkeletonList'
 import { UserCard } from '../components/UserCard'
@@ -12,16 +13,23 @@ export function HomePage() {
 
   const [search, setSearch] = useState('')
   const [activeDepartment, setActiveDepartment] = useState('all')
-  const [sortMode, setSortMode] = useState<SortMode>('alphabet')
 
-  // Получаем список отделов из загруженных сотрудников
+  const [sortMode, setSortMode] = useState<SortMode>(() => {
+    const savedSortMode = sessionStorage.getItem('sortMode')
+    return savedSortMode === 'birthday' ? 'birthday' : 'alphabet'
+  })
+
+  // Сохраняем выбранную сортировку
+  useEffect(() => {
+    sessionStorage.setItem('sortMode', sortMode)
+  }, [sortMode])
+
   const departments = useMemo(() => {
     return Array.from(new Set(users.map((user) => user.department))).sort(
       (a, b) => departmentLabel(a).localeCompare(departmentLabel(b), 'ru'),
     )
   }, [users])
 
-  // Фильтруем и сортируем сотрудников
   const filteredUsers = useMemo(() => {
     const query = search.trim().toLowerCase()
 
@@ -45,7 +53,6 @@ export function HomePage() {
         )
       }
 
-      // Сортировка по ближайшему дню рождения
       const getNextBirthday = (birthday: string) => {
         const [, month, day] = birthday.split('-').map(Number)
         const today = new Date()
