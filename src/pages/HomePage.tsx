@@ -98,9 +98,8 @@ export function HomePage() {
 
           <div className="department-tabs">
             <button
-              className={`department-tab ${
-                activeDepartment === 'all' ? 'department-tab--active' : ''
-              }`}
+              className={`department-tab ${activeDepartment === 'all' ? 'department-tab--active' : ''
+                }`}
               onClick={() => setActiveDepartment('all')}
             >
               Все
@@ -109,11 +108,10 @@ export function HomePage() {
             {departments.map((department) => (
               <button
                 key={department}
-                className={`department-tab ${
-                  activeDepartment === department
-                    ? 'department-tab--active'
-                    : ''
-                }`}
+                className={`department-tab ${activeDepartment === department
+                  ? 'department-tab--active'
+                  : ''
+                  }`}
                 onClick={() => setActiveDepartment(department)}
               >
                 {departmentLabel(department)}
